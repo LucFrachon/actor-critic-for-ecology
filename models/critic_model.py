@@ -44,7 +44,8 @@ class Critic(nn.Module):
         return self.regressor(h)
 
     def loss_fn(self, td_targets, value_estimates):
-        return (td_targets - value_estimates) ** 2
+
+        return torch.mean((td_targets - value_estimates) ** 2)
 
     def training_step(self, batch):
         states, td_targets = batch

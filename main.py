@@ -4,8 +4,8 @@ from plotting.plotting import plot_episode_stats
 
 
 if __name__ == '__main__':
-    n_episodes = 300
-    n_steps_per_ep = 300
+    n_episodes = 3
+    n_steps_per_ep = 30
 
     episode_lengths, episode_rewards = train(
         n_episodes,
@@ -13,6 +13,6 @@ if __name__ == '__main__':
         n_steps_per_ep,
         initial_state=None
     )
-    plot_episode_stats()
+    plot_episode_stats(episode_lengths, episode_rewards, smoothing_window=5)
 
 

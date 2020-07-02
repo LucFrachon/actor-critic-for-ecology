@@ -35,13 +35,13 @@ class Actor(nn.Module):
             *state_features,
             nn.AdaptiveAvgPool2d(1)
         )
-        action_features = []
-        for i in range(len(k_sizes)):
-            action_features.append(self._conv_block(channels[i], channels[i + 1], k_sizes[i], strides[i]))
-        self.action_features = nn.Sequential(
-            *action_features,
-            nn.AdaptiveAvgPool2d(1)
-        )
+        # action_features = []
+        # for i in range(len(k_sizes)):
+        #     action_features.append(self._conv_block(channels[i], channels[i + 1], k_sizes[i], strides[i]))
+        # self.action_features = nn.Sequential(
+        #     *action_features,
+        #     nn.AdaptiveAvgPool2d(1)
+        # )
         self.classifier = nn.Sequential(
             nn.Flatten(),
             nn.Linear(channels[-1], self.hparams.dense_units, bias=True),
@@ -51,10 +51,11 @@ class Actor(nn.Module):
     def _configure_optimiser(self):
         return optim.AdamW(self.parameters(), lr = self.hparams.lr, weight_decay = self.hparams.wd)
 
-    def forward(self, states, actions):
+    def forward(self, states,):
         h_states = self.state_features(states)
-        h_actions = self.action_features(actions)
-        return self.classifier(h_states + h_actions).clamp_(min=self.hparams.epsilon)
+        # h_actions = self.action_features(actions)
+        return self.classifier(h_states # + h_actions
+                               ).clamp(min=self.hparams.epsilon)
 
     def loss_fn(self, td_errors, action_probs):
         # Scalar actions: loss = - log(pi(action|state) * td_target
@@ -67,13 +68,13 @@ class Actor(nn.Module):
         return loss_val
 
     def training_step(self, batch):
-        states, actions, td_errors = batch
-        actions.reshape_(states.size())
-        if states.dim() == 2: states.unsqueeze_(0)
-        if td_errors.dim() == 1: td_errors.unsqueeze_(0)
+        states, td_errors = batch
+        # actions.reshape_(states.size())
+        # if states.dim() == 2: states = states.unsqueeze(0)
+        # if td_errors.dim() == 1: td_errors = td_errors.unsqueeze(0)
         self.optim.zero_grad()
         with torch.enable_grad():
-            action_probs = self(states, actions)
+            action_probs = self(states) # , actions)
             loss_value = self.loss_fn(td_errors, action_probs)
             loss_value.backward()
             self.optim.step()
