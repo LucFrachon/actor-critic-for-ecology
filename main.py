@@ -14,5 +14,3 @@ if __name__ == '__main__':
         initial_state=None
     )
     plot_episode_stats(episode_lengths, episode_rewards, smoothing_window=5)
-
-

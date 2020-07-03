@@ -76,11 +76,14 @@ class InvasiveEnv:
         if self.reward_method == 'sum':
             reward = -np.sum(self.grid).astype(np.float32) - cost
         else:  # 'count'
-            reward = -np.count_nonzero(self.grid).astype(np.float32) - cost
+            reward = -float(np.count_nonzero(self.grid)) - cost
         return reward
 
     def __repr__(self):
-        return f'Environment with {self.grid.sum()} individuals:\n{self.grid}'
+        if self.grid:
+            return f'Environment with {self.grid.sum()} individuals:\n{self.grid}'
+        else:
+            return 'Undefined environment. Run .reset() first.'
 
 
 if __name__ == '__main__':

@@ -17,6 +17,7 @@ def run_episode(agent, env, n_steps, ep_idx, initial_state = None):
         # next_state = torch.tensor(next_state, device=device)
         # reward = torch.tensor(reward, device=device)
         agent.observe(next_state, reward, is_terminal)
+        agent.train()
         score += reward
         if is_terminal:
             break
@@ -26,7 +27,7 @@ def run_episode(agent, env, n_steps, ep_idx, initial_state = None):
 
 def train(n_episodes,
           env_hparams, agent_hparams, actor_hparams, critic_hparams,
-          n_steps=300, initial_state = None):
+          n_steps = 300, initial_state = None):
     env = InvasiveEnv(env_hparams, initial_state)
     agent = Exerminator(env.side_len, actor_hparams, critic_hparams, agent_hparams)
     episode_lens = []

@@ -51,7 +51,7 @@ class Actor(nn.Module):
     def _configure_optimiser(self):
         return optim.AdamW(self.parameters(), lr = self.hparams.lr, weight_decay = self.hparams.wd)
 
-    def forward(self, states,):
+    def forward(self, states):
         h_states = self.state_features(states)
         # h_actions = self.action_features(actions)
         return self.classifier(h_states # + h_actions
@@ -64,7 +64,7 @@ class Actor(nn.Module):
         #          = -log(pi(a_1|state) * pi(a_2|state) * ... * pi(a_n|state)) * td_error
         #          = -td_error * sum(log(pi(a_i|state)))  ?? hopefully
         # but clamp pi(*) values above some small constant to avoid zero everywhere
-        loss_val = -(td_errors * torch.sum(torch.log(action_probs), dim=1)).mean()
+        loss_val = (td_errors * torch.sum(torch.log(action_probs), dim=1)).mean()
         return loss_val
 
     def training_step(self, batch):
@@ -73,11 +73,11 @@ class Actor(nn.Module):
         # if states.dim() == 2: states = states.unsqueeze(0)
         # if td_errors.dim() == 1: td_errors = td_errors.unsqueeze(0)
         self.optim.zero_grad()
-        with torch.enable_grad():
-            action_probs = self(states) # , actions)
-            loss_value = self.loss_fn(td_errors, action_probs)
-            loss_value.backward()
-            self.optim.step()
+        # with torch.enable_grad():
+        action_probs = self(states) # , actions)
+        loss_value = self.loss_fn(td_errors, action_probs)
+        loss_value.backward()
+        self.optim.step()
         return loss_value
 
 

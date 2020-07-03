@@ -8,16 +8,15 @@ env_hparams = OrderedDict(
     erad_beta         = 3,
     k                 = 10.,
     mgmt_cost         = 1.,
-    eradication_bonus = 100.,
+    eradication_bonus = 1000.,
     n_pop_ini         = 10,
-    reward_method     = 'sum',
+    reward_method     = 'count',
 )
 agent_hparams = OrderedDict(
-    mem_size = 10000,
+    mem_size = 1000,
     gamma    = 0.99,
-    steps    = 300,
-    device   = 'cuda',
-    batch_sz = 64,
+    device   = 'cpu',
+    batch_sz = 16,  # must be < mem_size
 )
 actor_hparams = OrderedDict(
     lr           = 1e-3,
