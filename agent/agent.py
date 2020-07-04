@@ -27,7 +27,7 @@ class Exerminator:
         self.current_action = None
 
     def get_sample(self):
-        sample = random.sample(self.memory, self.hparams.batch_sz)
+        sample = random.sample(self.memory, min(len(self.memory), self.hparams.batch_sz))
         states, actions, rewards, done, next_states = map(list, zip(*sample))
         states = torch.cat(states, dim=0).to(self.hparams.device)
         actions = torch.cat(actions, dim=0).to(self.hparams.device)
@@ -51,7 +51,8 @@ class Exerminator:
         return self.current_action.cpu().numpy()
 
     def train(self):
-        if len(self.memory) > self.hparams.batch_sz:
+        # if len(self.memory) > self.hparams.batch_sz:
+        if len(self.memory) >= 1:
             states, actions, rewards, done, next_states = self.get_sample()
             next_values = self.critic(next_states).detach()
             td_targets = rewards + self.hparams.gamma * next_values
@@ -60,14 +61,16 @@ class Exerminator:
 
             # Train critic
             value_loss = self.critic.training_step((states, td_targets))
-            print(f"Updated Critic, value loss = {value_loss:.5f}")
+            print(f"\rUpdated Critic, value loss = {value_loss.detach().item():.2f}")
 
             # Train actor
             # with torch.no_grad():
             current_qs = self.critic(states)
             td_errors = td_targets - current_qs
             policy_loss = self.actor.training_step((states, td_errors))
-            print(f"Updated Actor, policy loss = {policy_loss:.5f}")
+            print(f"\rUpdated Actor, policy loss = {policy_loss.detach().item():.2f}")
+            return value_loss.detach().item(), policy_loss.detach().item()
+        return None, None
 
 """
 Notes:

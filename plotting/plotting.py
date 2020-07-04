@@ -3,7 +3,8 @@ import numpy as np
 import pandas as pd
 
 
-def plot_episode_stats(episode_lengths, episode_scores, smoothing_window = 100, noshow=False):
+def plot_episode_stats(episode_lengths, episode_scores, val_losses, pol_losses, action_locs,
+                       smoothing_window = 100, noshow=False):
     # Plot the episode length over time
     fig1 = plt.figure(figsize=(10, 5))
     plt.plot(episode_lengths)
@@ -38,4 +39,37 @@ def plot_episode_stats(episode_lengths, episode_scores, smoothing_window = 100, 
     else:
         plt.show(fig3)
 
-    return fig1, fig2, fig3
+    # Plot value loss
+    fig4 = plt.figure(figsize=(10,5))
+    plt.plot(np.arange(len(val_losses)), val_losses)
+    plt.xlabel("Steps")
+    plt.ylabel("Value Loss")
+    plt.title("Value loss over time steps")
+    if noshow:
+        plt.close(fig4)
+    else:
+        plt.show(fig4)
+
+    # Plot policy loss
+    fig5 = plt.figure(figsize=(10,5))
+    plt.plot(np.arange(len(pol_losses)), pol_losses)
+    plt.xlabel("Steps")
+    plt.ylabel("Policy Loss")
+    plt.title("Policy loss over time steps")
+    if noshow:
+        plt.close(fig5)
+    else:
+        plt.show(fig5)
+
+    # Plot number of action locations
+    fig5 = plt.figure(figsize=(10,5))
+    plt.plot(np.arange(len(action_locs)), action_locs)
+    plt.xlabel("Steps")
+    plt.ylabel("# action locations")
+    plt.title("Number of action locations over time steps")
+    if noshow:
+        plt.close(fig5)
+    else:
+        plt.show(fig5)
+
+    return fig1, fig2, fig3, fig4, fig5
