@@ -4,8 +4,8 @@ from plotting.plotting import plot_episode_stats
 
 
 if __name__ == '__main__':
-    n_episodes = 100
-    n_steps_per_ep = 300
+    n_episodes = 1000
+    n_steps_per_ep = 1000
 
     episode_lengths, episode_rewards, val_losses, pol_losses, action_locs = train(
         n_episodes,

@@ -2,6 +2,7 @@ from argparse import Namespace
 import random
 from collections import deque
 import torch
+import torch.distributions.binomial as binomial
 from models.actor_model import Actor
 from models.critic_model import Critic
 
@@ -45,9 +46,11 @@ class Exerminator:
 
     def pick_action(self):
         # with torch.no_grad():
-        action_prob = self.actor(self.current_state).detach() # , self.current_action)
+        action_prob = self.actor(self.current_state).detach()  # , self.current_action)
         assert action_prob.size() == (1, self.env_side_len * self.env_side_len)
-        self.current_action = torch.round(action_prob).reshape((1, 1, self.env_side_len, self.env_side_len))
+        binom_dist = binomial.Binomial(1, probs = action_prob)
+        self.current_action = binom_dist.sample().reshape((1, 1, self.env_side_len, self.env_side_len))
+        # self.current_action = torch.round(action_prob).reshape((1, 1, self.env_side_len, self.env_side_len))
         return self.current_action.cpu().numpy()
 
     def train(self):
