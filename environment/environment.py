@@ -39,7 +39,7 @@ class InvasiveEnv:
         If none is passed, all the population is stacked on the centre cell.
         :return New grid layout, as a Numpy 2d-array of integers
         """
-        if not initial_state:
+        if initial_state is None:
             initial_locs = np.ones((self.n_pop_ini, 2), dtype = int) * self.side_len // 2
             self.grid = locs_to_grid(initial_locs, self.side_len)
         else:

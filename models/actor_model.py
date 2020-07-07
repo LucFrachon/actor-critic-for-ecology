@@ -54,8 +54,8 @@ class Actor(nn.Module):
     def forward(self, states):
         h_states = self.state_features(states)
         # h_actions = self.action_features(actions)
-        return self.classifier(h_states # + h_actions
-                               ).clamp(min=self.hparams.epsilon)
+        return self.classifier(h_states)
+                               # ).clamp(min=self.hparams.epsilon)
 
     def loss_fn(self, td_errors, action_probs):
         # Scalar actions: loss = - log(pi(action|state) * td_target
@@ -63,8 +63,10 @@ class Actor(nn.Module):
         #     loss = -log(pi(action|state) * td_error)
         #          = -log(pi(a_1|state) * pi(a_2|state) * ... * pi(a_n|state)) * td_error
         #          = -td_error * sum(log(pi(a_i|state)))  ?? hopefully
-        # but clamp pi(*) values above some small constant to avoid zero everywhere
+        # but clamp pi(*) values above some small constant to avoid zero everywhere?
+        # Add regulariser to prevent all probs to go to 1 (trivial minimal)
         loss_val = (td_errors * torch.sum(torch.log(action_probs), dim=1)).mean()
+                    # + self.hparams.regul_rate * torch.sum(action_probs)).mean()
         return loss_val
 
     def training_step(self, batch):
