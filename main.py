@@ -8,8 +8,9 @@ if __name__ == '__main__':
     n_episodes = 100
     n_steps_per_ep = 300
 
-    initial_state = np.random.randint(0, env_hparams['n_pop_ini'],
-                                      size=(env_hparams['side_len'], env_hparams['side_len']))
+    # initial_state = np.random.randint(0, env_hparams['n_pop_ini'],
+    #                                   size=(env_hparams['side_len'], env_hparams['side_len']))
+    initial_state = None
 
     episode_lengths, episode_rewards, val_losses, pol_losses, action_locs = train(
         n_episodes,

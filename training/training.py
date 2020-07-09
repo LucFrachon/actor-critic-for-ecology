@@ -13,6 +13,8 @@ def run_episode(agent, env, n_steps, ep_idx, initial_state = None):
     action_locs = []
     agent.current_state = torch.tensor(env.reset(initial_state), device=agent.device).reshape((
         1, 1, env.side_len, env.side_len))
+    if agent.hparams.normalise_states:
+        agent.current_state = agent.normalise_state(agent.current_state)  # normalise
     while (step < n_steps) and (not is_terminal):
         action = agent.pick_action()
         action_locs.append(action.sum())

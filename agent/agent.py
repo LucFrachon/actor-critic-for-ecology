@@ -39,6 +39,8 @@ class Exerminator:
     def observe(self, next_state, reward, done):
         next_state = torch.tensor(next_state, device=self.hparams.device).reshape(
             (-1, 1, self.env_side_len, self.env_side_len))
+        if self.hparams.normalise_states:
+            next_state = self.normalise_state(next_state)
         self.memory.append((self.current_state, self.current_action, reward, done, next_state))
         self.current_state = next_state
         if len(self.memory) > self.hparams.mem_size:
@@ -74,6 +76,12 @@ class Exerminator:
             print(f"\rUpdated Actor, policy loss = {policy_loss.detach().item():.2f}")
             return value_loss.detach().item(), policy_loss.detach().item()
         return None, None
+
+    def normalise_state(self, state):
+        if (state > 0.).any():
+            return state / state.max()
+        else:
+            return state
 
 """
 Notes:

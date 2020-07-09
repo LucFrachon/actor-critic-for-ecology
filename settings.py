@@ -1,7 +1,7 @@
 from _collections import OrderedDict
 
 env_hparams = OrderedDict(
-    side_len          = 31,
+    side_len          = 11,
     death_rate        = 0.01,
     disp_sigma        = 0.5,
     erad_alpha        = 4,
@@ -9,7 +9,7 @@ env_hparams = OrderedDict(
     k                 = 10.,
     mgmt_cost         = 1000.,
     eradication_bonus = 0.,
-    n_pop_ini         = 10,  # max per occupied cell
+    n_pop_ini         = 100,  # max per occupied cell
     reward_method     = 'sum',
 )
 agent_hparams = OrderedDict(
@@ -17,6 +17,7 @@ agent_hparams = OrderedDict(
     gamma    = 0.99,
     device   = 'cpu',
     batch_sz = 64,  # must be < mem_size
+    normalise_states = True,
 )
 actor_hparams = OrderedDict(
     lr           = 1e-4,
