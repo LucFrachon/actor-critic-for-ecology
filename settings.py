@@ -6,17 +6,17 @@ env_hparams = OrderedDict(
     disp_sigma        = 0.5,
     erad_alpha        = 4,
     erad_beta         = 3,
-    k                 = 10.,
-    mgmt_cost         = 1000.,
-    eradication_bonus = 0.,
-    n_pop_ini         = 100,  # max per occupied cell
-    reward_method     = 'sum',
+    k                 = 20.,
+    mgmt_cost         = 0.1,
+    eradication_bonus = 15.,
+    n_pop_ini         = 20,  # max per occupied cell
+    reward_method     = 'count',
 )
 agent_hparams = OrderedDict(
     mem_size = 1000,
-    gamma    = 0.99,
-    device   = 'cpu',
-    batch_sz = 64,  # must be < mem_size
+    gamma    = 0.95,
+    device   = 'cuda',
+    batch_sz = 32,  # must be < mem_size
     normalise_states = True,
 )
 actor_hparams = OrderedDict(
@@ -33,8 +33,8 @@ actor_hparams = OrderedDict(
 critic_hparams = OrderedDict(
     lr           = 1e-4,
     wd           = 1e-5,
-    kernel_sizes = [5, 3, 3],
-    channels     = [1, 16, 32, 64],  # always prepend channel widths with 1 (for the input, which has 1 channel).
-    strides      = [1, 2, 1],
+    kernel_sizes = [5, 3, 3, 3],
+    channels     = [1, 16, 32, 64, 128],  # always prepend channel widths with 1 (for the input, which has 1 channel).
+    strides      = [1, 2, 1, 2],
     device       = agent_hparams['device']
 )
