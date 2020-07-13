@@ -57,7 +57,7 @@ class Actor(nn.Module):
         return self.classifier(h_states)
                                # ).clamp(min=self.hparams.epsilon)
 
-    def loss_fn(self, td_errors, action_probs):
+    def loss_fn(self, td_errors, action_probs, actions):
         # Scalar actions: loss = - log(pi(action|state) * td_target
         # Vector-valued actions, assuming independence of dimensions:
         #     loss = -log(pi(action|state) * td_error)
@@ -65,19 +65,22 @@ class Actor(nn.Module):
         #          = -td_error * sum(log(pi(a_i|state)))  ?? hopefully
         # but clamp pi(*) values above some small constant to avoid zero everywhere?
         # Add regulariser to prevent all probs to go to 1 (trivial minimal)
-        loss_val = (td_errors * torch.sum(torch.log(action_probs), dim=1)).mean()
+        # Note: We only consider the probs of the action locations where we actually acted
+        action_probs = action_probs * actions
+        action_probs = torch.clamp(action_probs, 1e-8, 1 - 1e-8)
+        loss_val = -(td_errors * torch.sum(torch.log(action_probs), dim=1)).mean()
                     # + self.hparams.regul_rate * torch.sum(action_probs)).mean()
         return loss_val
 
     def training_step(self, batch):
-        states, td_errors = batch
+        states, td_errors, actions = batch
         # actions.reshape_(states.size())
         # if states.dim() == 2: states = states.unsqueeze(0)
         # if td_errors.dim() == 1: td_errors = td_errors.unsqueeze(0)
         self.optim.zero_grad()
         # with torch.enable_grad():
-        action_probs = self(states) # , actions)
-        loss_value = self.loss_fn(td_errors, action_probs)
+        action_probs = self(states)  # , actions)
+        loss_value = self.loss_fn(td_errors, action_probs, actions)
         loss_value.backward()
         self.optim.step()
         return loss_value

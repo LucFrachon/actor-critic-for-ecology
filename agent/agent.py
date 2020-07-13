@@ -70,9 +70,10 @@ class Exerminator:
 
             # Train actor
             # with torch.no_grad():
-            current_qs = self.critic(states)
-            td_errors = td_targets - current_qs
-            policy_loss = self.actor.training_step((states, td_errors))
+            current_vs = self.critic(states)
+            td_errors = td_targets - current_vs
+            actions_ = actions.flatten(start_dim=1)
+            policy_loss = self.actor.training_step((states, td_errors, actions_))
             print(f"\rUpdated Actor, policy loss = {policy_loss.detach().item():.2f}")
             return value_loss.detach().item(), policy_loss.detach().item()
         return None, None

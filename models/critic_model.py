@@ -33,8 +33,8 @@ class Critic(nn.Module):
             nn.AdaptiveAvgPool2d(1)
         )
         self.regressor = nn.Sequential(nn.Flatten(),
-                                       nn.Linear(channels[-1], 1),
-                                       nn.Sigmoid())
+                                       nn.Linear(channels[-1], 1)
+                                       )
 
     def _configure_optimiser(self):
         return optim.AdamW(self.parameters(), lr = self.hparams.lr, weight_decay = self.hparams.wd)

@@ -77,7 +77,7 @@ class InvasiveEnv:
             reward = -np.sum(self.grid).astype(np.float32) - cost
         else:  # 'count'
             reward = -float(np.count_nonzero(self.grid)) - cost
-        return reward
+        return reward / (self.side_len * self.side_len)
 
     def __repr__(self):
         if self.grid:
