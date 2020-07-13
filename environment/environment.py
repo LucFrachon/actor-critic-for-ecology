@@ -31,6 +31,7 @@ class InvasiveEnv:
         # number of infected cells on the grid. Other methods can be implemented in self.compute_reward.
         assert hparams.reward_method in ['sum', 'count']
         self.reward_method = hparams.reward_method
+        self.normalise_reward = hparams.normalise_reward
         self.grid = None
 
     def reset(self, initial_state: Optional[np.ndarray]) -> np.ndarray:
@@ -77,7 +78,9 @@ class InvasiveEnv:
             reward = -np.sum(self.grid).astype(np.float32) - cost
         else:  # 'count'
             reward = -float(np.count_nonzero(self.grid)) - cost
-        return reward / (self.side_len * self.side_len)
+        if self.normalise_reward:
+            reward /= (self.side_len * self.side_len)
+        return reward
 
     def __repr__(self):
         if self.grid:

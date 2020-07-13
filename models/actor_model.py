@@ -65,11 +65,10 @@ class Actor(nn.Module):
         #          = -td_error * sum(log(pi(a_i|state)))  ?? hopefully
         # but clamp pi(*) values above some small constant to avoid zero everywhere?
         # Add regulariser to prevent all probs to go to 1 (trivial minimal)
-        # Note: We only consider the probs of the action locations where we actually acted
-        action_probs = action_probs * actions
-        action_probs = torch.clamp(action_probs, 1e-8, 1 - 1e-8)
-        loss_val = -(td_errors * torch.sum(torch.log(action_probs), dim=1)).mean()
-                    # + self.hparams.regul_rate * torch.sum(action_probs)).mean()
+        action_probs = action_probs * actions  # mask action_probs with actual action locations
+        action_probs = torch.clamp(action_probs, self.hparams.epsilon, 1 - self.hparams.epsilon)
+        loss_val = -(td_errors * torch.sum(torch.log(action_probs), dim=1)).mean() \
+            + self.hparams.regul_rate * torch.norm(action_probs, p=1, dim=1).mean()
         return loss_val
 
     def training_step(self, batch):

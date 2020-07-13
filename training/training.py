@@ -1,3 +1,4 @@
+import time
 import numpy as np
 import torch
 from environment.environment import InvasiveEnv
@@ -19,7 +20,8 @@ def run_episode(agent, env, n_steps, ep_idx, initial_state = None):
         agent.current_state = agent.normalise_state(agent.current_state)  # normalise
     while (step < n_steps) and (not is_terminal):
         action = agent.pick_action()
-        action_locs.append(action.sum())
+        n_actions = action.sum().astype(np.int32)
+        action_locs.append(n_actions)
         next_state, reward, is_terminal = env.step(action)
         # next_state = torch.tensor(next_state, device=device)
         # reward = torch.tensor(reward, device=device)
@@ -34,7 +36,7 @@ def run_episode(agent, env, n_steps, ep_idx, initial_state = None):
         score += reward
         if is_terminal:
             break
-        print(f"\rEpisode {ep_idx}, Step {step}: score {score:.1f}, population {pop_size}, "
+        print(f"\rEpisode {ep_idx}, Step {step}: Acted on {n_actions} cells; score {score:.1f}, population {pop_size}, "
               f"occupied cells: {occupancy}")
         step += 1
     return agent, score, step, val_losses, pol_losses, action_locs, pop_sizes, occupied_cells
@@ -42,6 +44,7 @@ def run_episode(agent, env, n_steps, ep_idx, initial_state = None):
 def train(n_episodes,
           env_hparams, agent_hparams, actor_hparams, critic_hparams,
           n_steps = 300, initial_state = None):
+    start = time.time()
     env = InvasiveEnv(env_hparams, initial_state)
     agent = Exerminator(env.side_len, actor_hparams, critic_hparams, agent_hparams)
     episode_lens, episode_rwds = [], []
@@ -58,5 +61,6 @@ def train(n_episodes,
         action_locs.extend(ep_action_locs)
         pop_sizes.extend(pop)
         occupied_cells.extend(occ)
+    print(f'Training completed in {time.time() - start} seconds.')
 
     return episode_lens, episode_rwds, val_losses, pol_losses, action_locs, pop_sizes, occupied_cells

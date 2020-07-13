@@ -5,19 +5,12 @@ def reproduce(grid: np.ndarray, k: int) -> np.ndarray:
     """
     :param grid: numpy 2d-array representing the environment.
     :param k: ???
-    # TODO: Vectorise this code
     """
     if grid.dtype == np.float32:
         grid = grid.astype(np.int32)
     mean_offspring = (grid != 0) * (1 + 1. / (1. + grid / k))
     n_offspring = np.random.poisson(lam=mean_offspring)
     grid *= n_offspring
-    # for r in range(grid.shape[0]):
-    #     for c in range(grid.shape[1]):
-    #         for n in range(grid[r, c]):
-    #             n_offspring = int(np.random.poisson(lam = mean_offspring[r, c]))
-    #             grid[r, c] += n_offspring
-
     return grid
 
 
@@ -28,7 +21,7 @@ def death(grid: np.ndarray, death_rate: float) -> np.ndarray:
     """
     if grid.dtype == np.int32:
         grid = grid.astype(np.float32)
-    grid *= 1 - death_rate
+    grid *= (1 - death_rate)
     return np.round(grid).astype(np.int32)
 
 

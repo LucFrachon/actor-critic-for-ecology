@@ -1,4 +1,3 @@
-import os
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -6,8 +5,6 @@ import pandas as pd
 
 def plot_episode_stats(episode_lengths, episode_scores, val_losses, pol_losses, action_locs, pop_sizes, occupied_cells,
                        smoothing_window = 100, show=True, save=False, save_dir='plots'):
-
-    os.makedirs(save_dir, exist_ok=False)
 
     # Plot the episode length over time
     fig1 = plt.figure(figsize=(10, 5))
