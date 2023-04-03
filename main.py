@@ -9,12 +9,12 @@ if __name__ == '__main__':
     # import cProfile
 
 
-    n_episodes = 100
-    n_steps_per_ep = 200
+    n_episodes = 30
+    n_steps_per_ep = 100
     save_plots = True
     if save_plots:
         save_dir = './ep100_steps100_sum_51x51'
-        os.makedirs(save_dir, exist_ok=False)
+        os.makedirs(save_dir, exist_ok=True)
     else:
         save_dir = None
 
@@ -26,10 +26,23 @@ if __name__ == '__main__':
     #              'initial_state=initial_state)', sort=1)
     episode_lengths, episode_rewards, val_losses, pol_losses, action_locs, pop_sizes, occupied_cells = train(
         n_episodes,
-        env_hparams, agent_hparams, actor_hparams, critic_hparams,
+        env_hparams,
+        agent_hparams,
+        actor_hparams,
+        critic_hparams,
         n_steps_per_ep,
         initial_state=initial_state
     )
-    plot_episode_stats(episode_lengths, episode_rewards, val_losses, pol_losses, action_locs,
-                       pop_sizes, occupied_cells, smoothing_window=5, show=True, save=save_plots,
-                       save_dir=save_dir)
+    plot_episode_stats(
+        episode_lengths,
+        episode_rewards,
+        val_losses,
+        pol_losses,
+        action_locs,
+        pop_sizes,
+        occupied_cells,
+        smoothing_window=5,
+        show=True,
+        save=save_plots,
+        save_dir=save_dir
+    )

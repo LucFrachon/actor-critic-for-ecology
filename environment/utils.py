@@ -8,6 +8,7 @@ def locs_to_grid(locs, grid_dim):
     grid[unique[:, 0], unique[:, 1]] = counts
     return grid
 
+
 def grid_to_locs(grid):
     grid = grid.squeeze().astype(int)
     x, y = np.nonzero(grid)

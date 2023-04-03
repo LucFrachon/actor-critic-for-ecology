@@ -6,12 +6,11 @@ from environment.life_cycle import reproduce, death
 from environment.diffusion import diffuse
 from environment.eradication import eradicate
 
-np.set_printoptions(linewidth = 320)
+np.set_printoptions(linewidth=320)
 
 
 class InvasiveEnv:
-
-    def __init__(self, hparams, initial_state = None):
+    def __init__(self, hparams, initial_state=None):
         """
         :param initial_state: A (n_population, 2) np.ndarray with the initial positions of each population member.
         If not provided, starts with self.n_pop_ini in the centre of the grid.
@@ -41,7 +40,8 @@ class InvasiveEnv:
         :return New grid layout, as a Numpy 2d-array of integers
         """
         if initial_state is None:
-            initial_locs = np.ones((self.n_pop_ini, 2), dtype = int) * self.side_len // 2
+
+            initial_locs = np.ones((self.n_pop_ini, 2), dtype=int) * self.side_len // 2
             self.grid = locs_to_grid(initial_locs, self.side_len)
         else:
             self.grid = initial_state
@@ -60,7 +60,7 @@ class InvasiveEnv:
         # Die
         self.grid = death(self.grid, self.death_rate)
         # Eradication
-        self.grid = eradicate(action, self.grid, self.erad_alpha, self.erad_beta)
+        self.grid = eradicate(self.grid, action, self.erad_alpha, self.erad_beta)
         # Management cost
         cost = action.sum() * self.mgmt_cost
         # Is this the terminal state?
@@ -98,7 +98,6 @@ if __name__ == '__main__':
         print(action_locs)
         env.step(action_locs)
         print(env.grid)
-
 
 """
 hparam:

@@ -6,8 +6,9 @@ import torch.distributions.binomial as binomial
 from models.actor_model import Actor
 from models.critic_model import Critic
 
-torch.autograd.set_detect_anomaly(True
-                                  )
+torch.autograd.set_detect_anomaly(True)
+
+
 class Exerminator:
 
     def __init__(self, env_side_len, actor_hparams, critic_hparams, agent_hparams):
@@ -56,7 +57,7 @@ class Exerminator:
         binom_dist = binomial.Binomial(1, probs = action_prob)
         self.current_action = binom_dist.sample().reshape((1, 1, self.env_side_len, self.env_side_len))
         # self.current_action = torch.round(action_prob).reshape((1, 1, self.env_side_len, self.env_side_len))
-        return self.current_action.cpu().numpy()
+        return self.current_action.cpu().squeeze().numpy()
 
     def train(self):
         # if len(self.memory) > self.hparams.batch_sz:
@@ -81,7 +82,8 @@ class Exerminator:
             return value_loss.detach().item(), policy_loss.detach().item()
         return None, None
 
-    def normalise_state(self, state):
+    @staticmethod
+    def normalise_state(state):
         if (state > 0.).any():
             return state / state.max()
         else:
@@ -96,5 +98,3 @@ agent_hparams:
     batch_sz: size of batches from replay buffer
     
 """
-
-

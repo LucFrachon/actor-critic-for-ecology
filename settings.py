@@ -1,15 +1,15 @@
 from _collections import OrderedDict
 
 env_hparams = OrderedDict(
-    side_len          = 51,
+    side_len          = 35,
     death_rate        = 0.1,
     disp_sigma        = 0.2,
-    erad_alpha        = 4,
-    erad_beta         = 3,
+    erad_alpha        = 6,
+    erad_beta         = 2,
     k                 = 10.,
-    mgmt_cost         = 5.,
-    eradication_bonus = 100.,
-    n_pop_ini         = 10,  # max per occupied cell
+    mgmt_cost         = 10.,
+    eradication_bonus = 300.,
+    n_pop_ini         = 20,  # max per occupied cell
     reward_method     = 'sum',
     normalise_reward  = True
 )
