@@ -3,11 +3,10 @@ import numpy as np
 import pandas as pd
 
 
-def plot_episode_stats(episode_lengths, episode_scores, val_losses, pol_losses, action_locs, pop_sizes, occupied_cells,
-                       smoothing_window = 100, show=True, save=False, save_dir='plots'):
-
+def plot_episode_stats(episode_lengths, episode_scores, val_losses, pol_losses, action_locs, pop_sizes,
+                       smoothing_window=100, show=True, save=False, save_dir='plots'):
     # Plot the episode length over time
-    fig1 = plt.figure(figsize=(10, 5))
+    ep_length = plt.figure(figsize=(10, 5))
     plt.plot(episode_lengths)
     plt.xlabel("Episode")
     plt.ylabel("Episode Length")
@@ -15,12 +14,12 @@ def plot_episode_stats(episode_lengths, episode_scores, val_losses, pol_losses, 
     if save:
         plt.savefig(save_dir + '/episode_lengths.png')
     if not show:
-        plt.close(fig1)
+        plt.close(ep_length)
     else:
-        plt.show(fig1)
+        plt.show(ep_length)
 
     # Plot the episode reward over time
-    fig2 = plt.figure(figsize=(10,5))
+    ep_reward = plt.figure(figsize=(10, 5))
     rewards_smoothed = pd.Series(episode_scores).rolling(smoothing_window, min_periods=smoothing_window).mean()
     plt.plot(rewards_smoothed)
     plt.xlabel("Episode")
@@ -29,12 +28,12 @@ def plot_episode_stats(episode_lengths, episode_scores, val_losses, pol_losses, 
     if save:
         plt.savefig(save_dir + '/rewards.png')
     if not show:
-        plt.close(fig2)
+        plt.close(ep_reward)
     else:
-        plt.show(fig2)
+        plt.show(ep_reward)
 
     # Plot time steps and episode number
-    fig3 = plt.figure(figsize=(10,5))
+    ep_time_steps = plt.figure(figsize=(10, 5))
     plt.plot(np.cumsum(episode_lengths), np.arange(len(episode_lengths)))
     plt.xlabel("Time Steps")
     plt.ylabel("Episode")
@@ -42,12 +41,12 @@ def plot_episode_stats(episode_lengths, episode_scores, val_losses, pol_losses, 
     if save:
         plt.savefig(save_dir + '/episode_per_time_step.png')
     if not show:
-        plt.close(fig3)
+        plt.close(ep_time_steps)
     else:
-        plt.show(fig3)
+        plt.show(ep_time_steps)
 
     # Plot value loss
-    fig4 = plt.figure(figsize=(10,5))
+    value_loss = plt.figure(figsize=(10, 5))
     plt.plot(np.arange(len(val_losses)), val_losses)
     plt.xlabel("Steps")
     plt.ylabel("Value Loss")
@@ -55,12 +54,12 @@ def plot_episode_stats(episode_lengths, episode_scores, val_losses, pol_losses, 
     if save:
         plt.savefig(save_dir + '/value_loss.png')
     if not show:
-        plt.close(fig4)
+        plt.close(value_loss)
     else:
-        plt.show(fig4)
+        plt.show(value_loss)
 
     # Plot policy loss
-    fig5 = plt.figure(figsize=(10,5))
+    policy_loss = plt.figure(figsize=(10, 5))
     plt.plot(np.arange(len(pol_losses)), pol_losses)
     plt.xlabel("Steps")
     plt.ylabel("Policy Loss")
@@ -68,12 +67,12 @@ def plot_episode_stats(episode_lengths, episode_scores, val_losses, pol_losses, 
     if save:
         plt.savefig(save_dir + '/policy_loss.png')
     if not show:
-        plt.close(fig5)
+        plt.close(policy_loss)
     else:
-        plt.show(fig5)
+        plt.show(policy_loss)
 
     # Plot number of action locations
-    fig5 = plt.figure(figsize=(10,5))
+    n_action_locs = plt.figure(figsize=(10, 5))
     plt.plot(np.arange(len(action_locs)), action_locs)
     plt.xlabel("Steps")
     plt.ylabel("# action locations")
@@ -81,12 +80,12 @@ def plot_episode_stats(episode_lengths, episode_scores, val_losses, pol_losses, 
     if save:
         plt.savefig(save_dir + '/action_locations.png')
     if not show:
-        plt.close(fig5)
+        plt.close(n_action_locs)
     else:
-        plt.show(fig5)
+        plt.show(n_action_locs)
 
     # Plot population size
-    fig6 = plt.figure(figsize=(10,5))
+    pop_size = plt.figure(figsize=(10, 5))
     plt.plot(np.arange(len(pop_sizes)), pop_sizes)
     plt.xlabel("Steps")
     plt.ylabel("Population size")
@@ -94,12 +93,12 @@ def plot_episode_stats(episode_lengths, episode_scores, val_losses, pol_losses, 
     if save:
         plt.savefig(save_dir + '/pop_size.png')
     if not show:
-        plt.close(fig6)
+        plt.close(pop_size)
     else:
-        plt.show(fig6)
+        plt.show(pop_size)
 
     # Plot number of occupied cells
-    fig7 = plt.figure(figsize=(10,5))
+    occupied_cells = plt.figure(figsize=(10, 5))
     plt.plot(np.arange(len(occupied_cells)), occupied_cells)
     plt.xlabel("Steps")
     plt.ylabel("# of occupied cells")
@@ -107,9 +106,8 @@ def plot_episode_stats(episode_lengths, episode_scores, val_losses, pol_losses, 
     if save:
         plt.savefig(save_dir + '/occupied_cells.png')
     if not show:
-        plt.close(fig7)
+        plt.close(occupied_cells)
     else:
-        plt.show(fig7)
+        plt.show(occupied_cells)
 
-
-    return fig1, fig2, fig3, fig4, fig5, fig6, fig7
+    return ep_length, ep_reward, ep_time_steps, value_loss, policy_loss, pop_size, occupied_cells

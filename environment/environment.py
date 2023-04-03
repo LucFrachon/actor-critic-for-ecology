@@ -75,12 +75,12 @@ class InvasiveEnv:
 
     def compute_reward(self, cost):
         if self.reward_method == 'sum':
-            reward = -np.sum(self.grid).astype(np.float32) - cost
+            reward = -np.sum(self.grid).astype(np.float32)
         else:  # 'count'
-            reward = -float(np.count_nonzero(self.grid)) - cost
+            reward = -float(np.count_nonzero(self.grid))
         if self.normalise_reward:
             reward /= (self.side_len * self.side_len)
-        return reward
+        return reward - cost
 
     def __repr__(self):
         if self.grid:
