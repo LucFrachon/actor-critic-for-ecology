@@ -5,7 +5,7 @@ from environment.environment import InvasiveEnv
 from agent.agent import Exerminator
 
 
-def run_episode(agent, env, n_steps, ep_idx, initial_state = None, print_every = 50):
+def run_episode(agent, env, n_steps, ep_idx, initial_state = None, print_every = 25):
     """
     :param initial_state: A (n_population, 2) np.ndarray with the initial positions of each population member.
         If not provided, starts with n_pop_ini in the centre of the grid.

@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 
-def plot_episode_stats(episode_lengths, episode_scores, val_losses, pol_losses, action_locs, pop_sizes,
+def plot_episode_stats(episode_lengths, episode_scores, val_losses, pol_losses, action_locs, pop_sizes, occupied_cells,
                        smoothing_window=100, show=True, save=False, save_dir='plots'):
     # Plot the episode length over time
     ep_length = plt.figure(figsize=(10, 5))
@@ -98,7 +98,7 @@ def plot_episode_stats(episode_lengths, episode_scores, val_losses, pol_losses, 
         plt.show(pop_size)
 
     # Plot number of occupied cells
-    occupied_cells = plt.figure(figsize=(10, 5))
+    n_occupied_cells = plt.figure(figsize=(10, 5))
     plt.plot(np.arange(len(occupied_cells)), occupied_cells)
     plt.xlabel("Steps")
     plt.ylabel("# of occupied cells")
@@ -106,8 +106,8 @@ def plot_episode_stats(episode_lengths, episode_scores, val_losses, pol_losses, 
     if save:
         plt.savefig(save_dir + '/occupied_cells.png')
     if not show:
-        plt.close(occupied_cells)
+        plt.close(n_occupied_cells)
     else:
-        plt.show(occupied_cells)
+        plt.show(n_occupied_cells)
 
-    return ep_length, ep_reward, ep_time_steps, value_loss, policy_loss, pop_size, occupied_cells
+    return ep_length, ep_reward, ep_time_steps, value_loss, policy_loss, pop_size, n_occupied_cells

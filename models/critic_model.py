@@ -44,6 +44,7 @@ class Critic(nn.Module):
         return self.regressor(h)
 
     def loss_fn(self, td_targets, value_estimates):
+        # L2 loss between targets and value estimates
         return torch.mean((td_targets - value_estimates) ** 2)
 
     def training_step(self, batch):
@@ -51,7 +52,6 @@ class Critic(nn.Module):
         # if states.dim() == 2: states.unsqueeze_(0)
         # if td_targets.dim() == 1: td_targets.unsqueeze_(0)
         self.optim.zero_grad()
-        # with torch.enable_grad():
         value_estimates = self(states)
         loss_value = self.loss_fn(td_targets, value_estimates)
         loss_value.backward()
