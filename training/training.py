@@ -5,7 +5,7 @@ from environment.environment import InvasiveEnv
 from agent.agent import Exerminator
 
 
-def run_episode(agent, env, n_steps, ep_idx, initial_state = None):
+def run_episode(agent, env, n_steps, ep_idx, initial_state = None, print_every = 50):
     """
     :param initial_state: A (n_population, 2) np.ndarray with the initial positions of each population member.
         If not provided, starts with n_pop_ini in the centre of the grid.
@@ -36,8 +36,9 @@ def run_episode(agent, env, n_steps, ep_idx, initial_state = None):
         score += reward
         if is_terminal:
             break
-        print(f"\rEpisode {ep_idx}, Step {step}: Acted on {n_actions} cells; score {score:.1f}, population {pop_size}, "
-              f"occupied cells: {occupancy}")
+        if step % print_every == 0:
+            print(f"\rEpisode {ep_idx}, Step {step}: Acted on {n_actions} cells; score {score:.1f}, "
+                  f"population {pop_size}, occupied cells: {occupancy}")
         step += 1
     return agent, score, step, val_losses, pol_losses, action_locs, pop_sizes, occupied_cells
 

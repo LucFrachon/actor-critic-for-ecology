@@ -6,11 +6,9 @@ from plotting.plotting import plot_episode_stats
 
 
 if __name__ == '__main__':
-    # import cProfile
-
 
     n_episodes = 100
-    n_steps_per_ep = 100
+    n_steps_per_ep = 300
     save_plots = True
     if save_plots:
         save_dir = f'./plots/ep{n_episodes}_' \

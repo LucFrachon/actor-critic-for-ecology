@@ -31,6 +31,7 @@ class InvasiveEnv:
         assert hparams.reward_method in ['sum', 'count']
         self.reward_method = hparams.reward_method
         self.normalise_reward = hparams.normalise_reward
+        self.normalise_cost = hparams.normalise_cost
         self.grid = None
 
     def reset(self, initial_state: Optional[np.ndarray]) -> np.ndarray:
@@ -80,6 +81,9 @@ class InvasiveEnv:
             reward = -float(np.count_nonzero(self.grid))
         if self.normalise_reward:
             reward /= (self.side_len * self.side_len)
+        if self.normalise_cost:
+            cost /= (self.side_len * self.side_len)
+
         return reward - cost
 
     def __repr__(self):

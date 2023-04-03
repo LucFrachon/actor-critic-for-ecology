@@ -11,13 +11,14 @@ env_hparams = OrderedDict(
     eradication_bonus = 300.,
     n_pop_ini         = 20,  # max per occupied cell
     reward_method     = 'sum',
-    normalise_reward  = True
+    normalise_reward  = True,
+    normalise_cost    = True,
 )
 agent_hparams = OrderedDict(
     mem_size         = 2000,
     gamma            = 0.95,
     device           = 'cuda',
-    batch_sz         = 64,  # must be < mem_size
+    batch_sz         = 1024,  # must be < mem_size
     normalise_states = True,
 )
 actor_hparams = OrderedDict(

@@ -85,7 +85,7 @@ class Exerminator:
     @staticmethod
     def normalise_state(state):
         if (state > 0.).any():
-            return state / state.max()
+            return (state - state.mean()) / state.std()
         else:
             return state
 
