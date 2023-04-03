@@ -44,7 +44,7 @@ def run_episode(agent, env, n_steps, ep_idx, initial_state = None, print_every =
 
 def train(n_episodes,
           env_hparams, agent_hparams, actor_hparams, critic_hparams,
-          n_steps = 300, initial_state = None):
+          n_steps = 300, initial_state = None, print_every = 25):
     start = time.time()
     env = InvasiveEnv(env_hparams, initial_state)
     agent = Exerminator(env.side_len, actor_hparams, critic_hparams, agent_hparams)
@@ -54,7 +54,7 @@ def train(n_episodes,
 
     for e in range(n_episodes):
         agent, ep_score, ep_len, ep_val_losses, ep_pol_losses, ep_action_locs, pop, occ = \
-            run_episode(agent, env, n_steps, e, initial_state)
+            run_episode(agent, env, n_steps, e, initial_state, print_every=print_every)
         episode_lens.append(ep_len)
         episode_rwds.append(ep_score)
         val_losses.extend(ep_val_losses)

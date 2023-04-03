@@ -1,24 +1,26 @@
 from _collections import OrderedDict
 
 env_hparams = OrderedDict(
-    side_len          = 35,
-    death_rate        = 0.1,
-    disp_sigma        = 0.2,
-    erad_alpha        = 6,
-    erad_beta         = 2,
-    k                 = 10.,
-    mgmt_cost         = 10.,
-    eradication_bonus = 500.,
-    n_pop_ini         = 20,  # max per occupied cell
-    reward_method     = 'sum',
-    normalise_reward  = True,
-    normalise_cost    = True,
+    side_len              = 31,
+    death_rate            = 0.1,
+    disp_sigma            = 0.2,
+    erad_alpha            = 4,
+    erad_beta             = 3,
+    k                     = 10.,
+    mgmt_cost             = 50.,
+    eradication_bonus     = 100.,
+    proliferation_penalty = 1000.,
+    proportion_occupied   = 0.25,
+    n_pop_ini             = 20,  # max per occupied cell
+    reward_method         = 'sum',
+    normalise_reward      = True,
+    normalise_cost        = True,
 )
 agent_hparams = OrderedDict(
-    mem_size         = 2000,
+    mem_size         = 2048,
     gamma            = 0.95,
     device           = 'cuda',
-    batch_sz         = 1024,  # must be < mem_size
+    batch_sz         = 2048,  # must be < mem_size
     normalise_states = True,
 )
 actor_hparams = OrderedDict(

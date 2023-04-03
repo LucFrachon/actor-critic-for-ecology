@@ -25,6 +25,7 @@ class InvasiveEnv:
         self.k = hparams.k  # used in reproduce
         self.mgmt_cost = hparams.mgmt_cost
         self.eradication_bonus = hparams.eradication_bonus
+        self.proliferation_penalty = hparams.proliferation_penalty
         self.n_pop_ini = hparams.n_pop_ini
         # Rewards can either be computed by summing up the whole remaining population, or by counting the
         # number of infected cells on the grid. Other methods can be implemented in self.compute_reward.
@@ -63,16 +64,21 @@ class InvasiveEnv:
         # Eradication
         self.grid = eradicate(self.grid, action, self.erad_alpha, self.erad_beta)
         # Management cost
-        cost = action.sum() * self.mgmt_cost
-        # Is this the terminal state?
-        done = self.grid.sum() == 0
-        if done:
-            bonus = self.eradication_bonus
+        cost = -action.sum() * self.mgmt_cost
+        # If the grid is empty, the episode is over
+        done_well = self.grid.sum() == 0
+        # or if the grid is fully populated, i.e. no empty cells
+        done_bad = not np.any(self.grid == 0)
+
+        if done_well:
+            bonus_or_penalty = self.eradication_bonus
+        elif done_bad:
+            bonus_or_penalty = -self.proliferation_penalty
         else:
-            bonus = 0
+            bonus_or_penalty = 0
         # Compute reward
-        reward = self.compute_reward(cost) + bonus
-        return self.grid.astype(np.float32), reward, done
+        reward = self.compute_reward(cost) + bonus_or_penalty
+        return self.grid.astype(np.float32), reward, (done_well or done_bad)
 
     def compute_reward(self, cost):
         if self.reward_method == 'sum':

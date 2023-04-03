@@ -7,7 +7,7 @@ from plotting.plotting import plot_episode_stats
 
 if __name__ == '__main__':
 
-    n_episodes = 1000
+    n_episodes = 200
     n_steps_per_ep = 1000
     save_plots = True
     if save_plots:
@@ -20,11 +20,20 @@ if __name__ == '__main__':
         save_dir = None
 
     # initial_state = None
-    initial_state = np.random.randint(
+    # sample a binary mask from a Bernoulli distribution with probability env_hparams['proportion_occupied']
+    occupancy_mask = np.random.binomial(
+        1,
+        env_hparams['proportion_occupied'],
+        size=(env_hparams['side_len'], env_hparams['side_len'])
+    )
+    initial_state = occupancy_mask * np.random.randint(
         0,
         env_hparams['n_pop_ini'],
         size=(env_hparams['side_len'], env_hparams['side_len'])
     )
+    print(f"Initial state: {occupancy_mask.sum()} occupied cells, {initial_state.sum()} total population:")
+    print(initial_state)
+
     episode_lengths, episode_rewards, val_losses, pol_losses, action_locs, pop_sizes, occupied_cells = train(
         n_episodes,
         env_hparams,
@@ -32,7 +41,8 @@ if __name__ == '__main__':
         actor_hparams,
         critic_hparams,
         n_steps_per_ep,
-        initial_state=initial_state
+        initial_state=initial_state,
+        print_every=1,
     )
     plot_episode_stats(
         episode_lengths,
