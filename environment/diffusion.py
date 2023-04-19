@@ -1,6 +1,6 @@
 import numpy as np
 
-from environment.utils import locs_to_grid, grid_to_locs
+from utils import locs_to_grid, grid_to_locs
 
 
 def diffuse(grid, sigma_diff=1., clamp=True):

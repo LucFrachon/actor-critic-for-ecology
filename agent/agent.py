@@ -48,15 +48,12 @@ class Exerminator:
             self.memory.popleft()
 
     def pick_action(self):
-        # with torch.no_grad():
         action_prob = self.actor(self.current_state).detach()  # , self.current_action)
         epsilon = self.actor.hparams.epsilon
         # Enforce some exploration
         action_prob = torch.clamp(action_prob, epsilon, 1 - epsilon)
-        assert action_prob.size() == (1, self.env_side_len * self.env_side_len)
         binom_dist = binomial.Binomial(1, probs = action_prob)
         self.current_action = binom_dist.sample().reshape((1, 1, self.env_side_len, self.env_side_len))
-        # self.current_action = torch.round(action_prob).reshape((1, 1, self.env_side_len, self.env_side_len))
         return self.current_action.cpu().squeeze().numpy()
 
     def train(self):

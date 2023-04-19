@@ -1,7 +1,7 @@
 from argparse import Namespace
 import numpy as np
 from typing import Optional, Tuple
-from environment.utils import locs_to_grid
+from utils import locs_to_grid
 from environment.life_cycle import reproduce, death
 from environment.diffusion import diffuse
 from environment.eradication import eradicate
@@ -74,10 +74,18 @@ class InvasiveEnv:
             bonus_or_penalty = self.eradication_bonus
         elif done_bad:
             bonus_or_penalty = -self.proliferation_penalty
+            print('The invasion got out of hand, you lose')
         else:
             bonus_or_penalty = 0
+        if self.normalise_reward:
+            bonus_or_penalty /= self.side_len ** 2
+
         # Compute reward
         reward = self.compute_reward(cost) + bonus_or_penalty
+
+        # TODO: try defining the penalty in terms of the population increase or increase in the number of occupied cells
+        # vs the previous step (instead of the absolute values for the current state).
+
         return self.grid.astype(np.float32), reward, (done_well or done_bad)
 
     def compute_reward(self, cost):
@@ -90,7 +98,7 @@ class InvasiveEnv:
         if self.normalise_cost:
             cost /= (self.side_len * self.side_len)
 
-        return reward - cost
+        return reward + cost
 
     def __repr__(self):
         if self.grid:

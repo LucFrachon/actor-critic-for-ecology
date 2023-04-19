@@ -1,5 +1,5 @@
 import numpy as np
-from environment.utils import locs_to_grid
+from utils import locs_to_grid
 
 
 def eradicate(grid, actions, beta_a=3, beta_b=4, actions_as_grid=True):
